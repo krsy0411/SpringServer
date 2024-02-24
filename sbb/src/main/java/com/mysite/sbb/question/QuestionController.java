@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+// url상에서 변하는 id값을 얻을 때에는 @PathVariable 애너테이션을 사용 
+import org.springframework.web.bind.annotation.PathVariable;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,5 +27,15 @@ public class QuestionController {
         // Model 객체에 ‘questionList’라는 이름으로 저장 : Model 객체는 자바 클래스(Java class)와 템플릿(template) 간의 연결 고리 역할
         model.addAttribute("questionList", questionList);
         return "question_list";
+    }
+    
+    // @GetMapping(value = "/question/detail/{id}")에서 사용한 id와 @PathVariable("id")의 매개변수 이름이 이와 같이 동일해야 한다
+    @GetMapping(value = "/question/detail/{id}")
+    public String detail(Model model, @PathVariable("id") Integer id) {
+        Question question = this.questionService.getQuestion(id);
+        // Model객체에 "question"이라는 이름으로 저장 : id를 통해 getQuestion을 수행한 질문을 템플릿의 attribute로 저
+        model.addAttribute("question", question);
+        // Model객체가 연결된 question_detail 템플릿 반
+        return "question_detail";
     }
 }
